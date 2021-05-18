@@ -1,0 +1,58 @@
+.tutis-field-box {
+	margin-bottom: 20px;
+}
+
+#adminmenu .toplevel_page_tutis-settings .wp-menu-image img {
+	width: 16px;
+}
+
+.tutis-button-row p.submit {
+	display: inline-block;
+    padding: 0;
+    margin-right: 10px;
+}
+
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('../loader.gif') 50% 50% no-repeat #f9f9f9;
+    opacity: .8;
+    display: none;
+    max-width: 100% !important;
+}
+
+.wp-core-ui input.button-reset {
+	background: #FF0000;
+	border-color: #FF0000;
+}
+
+.wp-core-ui input.button-reset:hover {
+	background: #FF0000;
+	border-color: #FF0000;
+}
+
+.tutis-button-row p.submit .button-primary.disabled {
+	pointer-events: none;
+}
+
+.tutis-button-row .button-primary .dashicons {
+	margin: 3px 0;
+}
+
+.form-table.select-space select {
+	margin-right: 10px;
+}
+
+textarea.tutis-admin-field-textarea {
+	max-width: 500px;
+	width: 100%;
+    height: 300px;
+}
+
+input.disabled {
+    pointer-events: none;
+}
