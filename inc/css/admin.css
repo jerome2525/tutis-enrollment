@@ -53,6 +53,14 @@ textarea.tutis-admin-field-textarea {
     height: 300px;
 }
 
-input.disabled {
+input.disabled,
+.button-primary.disabled {
     pointer-events: none;
+}
+
+.jconfirm .jconfirm-holder {
+    max-height: 100%;
+    padding: 50px 0;
+    max-width: 400px;
+    margin: 0 auto;
 }

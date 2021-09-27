@@ -27,15 +27,15 @@ else {
         	else {
         		$prog_label = 'Program';
         	}
-        	echo tutis_select_field_option_tax( 'program', $prog_label, $program ); 
+        	echo tutis_select_field_option_tax_program( 'program', $prog_label, $program ); 
         ?>
       </select>
     </div>
 
     <div class="tutis-filter-field tutis-filter-select">
-    	<input type="hidden" name="coursename" id="coursename_hidden1">
+    	<input type="hidden" name="course_code_offering" id="coursename_hidden1">
     	<select class="tutis-input-field" id="coursename1" theme="google" placeholder="Course Name" data-search="true">
-    		<?php echo tutis_select_field_option_post_type( 'courses', 'Course Name', $course_name ); ?>
+    		<?php echo tutis_select_field_option_post_type( 'courses', 'Course Name', $course_code ); ?>
       	</select>
     </div>
   </div>
@@ -49,7 +49,7 @@ else {
 
     <div class="tutis-filter-field tutis-filter-select">
       <select name="location" class="tutis-input-field" id="location1">
-        <?php echo tutis_select_field_option_tax( 'location','Location', $location ); ?>
+        <?php echo tutis_select_field_option_location( 'location','Location', $location ); ?>
       </select>
     </div>
   </div>  
@@ -78,4 +78,4 @@ else {
 </form>
 
 <div class="loader"></div>
-<div id="result" class="tutis-result tutis-course-page1"></div>
+<div id="result" class="tutis-result tutis-course-page1 tutis-main-result-form"></div>

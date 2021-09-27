@@ -98,6 +98,10 @@ input.tutis-input-date-range::-ms-input-placeholder { /* Microsoft Edge */
     margin: 0 !important;
 }
 
+.tutis-main-result-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
 
 .tutis-grid-table {
     display: grid;
@@ -106,7 +110,6 @@ input.tutis-input-date-range::-ms-input-placeholder { /* Microsoft Edge */
 }
 
 .tutis-grid-table > div {
-    padding: 8px 4px;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
     color: #121212;
@@ -124,11 +127,6 @@ input.tutis-input-date-range::-ms-input-placeholder { /* Microsoft Edge */
 
 .tutis-grid-table > div.padded {
     padding: 17px 10px;
-}
-
-.tutis-result {
-    max-width: 900px;
-    margin: 0 auto;
 }
 
 .tutis-grid-table .tbbody {
@@ -163,7 +161,6 @@ input.tutis-input-date-range::-ms-input-placeholder { /* Microsoft Edge */
 
 .tbbodycontent {
     grid-column: 1/7;
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     background: #C4D0E8;
     border-left: 11px solid #0062cc;
@@ -395,9 +392,9 @@ form input.tutis-btn:hover,
 }
 
 .multisteps-form {
-    max-width: 900px;
-    margin: 0 auto;
-    width: 95%;
+    max-width: 1024px !important;
+    margin: 0 auto !important;
+    width: 95% !important;
 }
 
 .multisteps-form h2,
@@ -413,7 +410,8 @@ form input.tutis-btn:hover,
 }
 
 .multisteps-form p,
-.multisteps-form span {
+.multisteps-form span,
+label.company-radio {
     margin-top: 0;
     font-size: 16px;
     margin-bottom: 20px;
@@ -421,6 +419,10 @@ form input.tutis-btn:hover,
     line-height: 1.2;
     color: #2c2c2c;
     font-family: 'Poppins', sans-serif;
+}
+
+label.company-radio {
+    cursor: pointer;
 }
 
 .multisteps-form .student-result-list p {
@@ -696,10 +698,9 @@ p.label {
     padding-top: 9px;
 }
 
-.multisteps-form-field label {
+.multisteps-form-field label:not(.company-radio) {
     opacity: 0;
     font-size: 12px;
-    font-weight: 400;
     line-height: 1.2;
     color: #007bff;
     font-family: 'Poppins', sans-serif;
@@ -761,6 +762,7 @@ p.label {
 
 .apply-discount-content {
     padding: 20px;
+    max-width: 767px;
 }
 
 .apply-discount-content h3 {
@@ -775,13 +777,17 @@ p.label {
 
 .apply-discount-content p {
     font-size: 16px;
-    margin-bottom: 20px;
     font-weight: 400;
     line-height: 1.2;
     color: #2c2c2c;
     font-family: 'Poppins', sans-serif;
     margin-top: 0;
     margin-bottom: 5px;
+}
+
+button.lity-close {
+    color: #000000;
+    position: absolute;
 }
 
 .discount-form-field {
@@ -841,7 +847,6 @@ a.pay-later-btn {
     font-size: 16px;
     font-weight: 400;
     line-height: 1.2;
-    color: #2c2c2c;
     font-family: 'Poppins', sans-serif;
     margin-right: 20px;
 }
@@ -902,6 +907,72 @@ p.tutis-notification {
 .tutis-filter-select .ss_ulsearch .ss_ul {
     width: 100% !important;
 }
+
+/* The alert message box */
+.tutis-alert {
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+    position: relative;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+    max-width: 1020px;
+    margin: 0 auto 15px;
+}
+
+.tutis-alert .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    position: absolute;
+    right: 7px;
+    top: 7px;
+}
+
+.tutis-alert .closebtn:hover {
+  color: black;
+}
+
+.tutis-alert strong {
+    text-transform: uppercase;
+}
+
+.tutis-alert p {
+    margin: 0 0 15px;
+    line-height: 1.2;
+}
+
+.tutis-alert p:last-of-type {
+    margin-bottom: 0;
+}
+
+.tutis-alert.success {
+    background-color: #04AA6D;
+}
+
+.tutis-alert.quote-alert p {
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.tutis-alert.quote-alert p:last-of-type {
+    margin-bottom: 0;
+}
+
+.tutis-btn.cancel-btn {
+    background-color: #ffffff;
+    border-color: #005cbf;
+    color: #005cbf;
+}
+
+.error-ref-id {
+    display: block;
+}
+
 
 @media screen and (max-width: 1024px) {
     .multisteps-form__panel {

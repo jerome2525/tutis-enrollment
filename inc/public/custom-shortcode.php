@@ -8,8 +8,8 @@ class Tutis_Custom_Shortcode {
   public function tutis_enrollment_form( $atts ) {
     $atts = shortcode_atts(
       array(
-        'program' => '',
-        'course_name' => '',
+        'program_code' => '',
+        'course_code' => '',
         'state' => '',
         'location' => '',
         'date_range' => '',
@@ -17,14 +17,14 @@ class Tutis_Custom_Shortcode {
 
     $atts, 'tutis_enrollment_form' );
 
-    $program = $atts['program'];
-    $course_name = $atts['course_name'];
+    $program = $atts['program_code'];
+    $course_code = $atts['course_code'];
     $state = $atts['state'];
     $location = $atts['location'];
     $date_range = $atts['date_range'];
 
     $auto_class = '';
-    if( $program || $course_name || $state || $location || $location ) {
+    if( $program || $course_code || $state || $location || $location ) {
       $auto_class = 'autosubmit1';
     }
 
@@ -37,7 +37,9 @@ class Tutis_Custom_Shortcode {
       $random_id = $_GET['temp_id'];
     }
     else {
-      $random_id = md5(microtime(true).mt_Rand());
+      //$random_id = md5(microtime(true).mt_Rand());
+      //$random_id = random_int(0,99);
+      $random_id = md5(microtime(true).random_int(0,99) );
     }
     $obj_id = get_queried_object_id();
 
@@ -46,6 +48,9 @@ class Tutis_Custom_Shortcode {
         if(isset( $_GET['course_id'] ) && isset( $_GET['temp_id'] ) && $_GET['np'] == '2' ) {
           include( plugin_dir_path( __FILE__ ) . 'templates/multi-step.php');
         }
+      }
+      else if(isset( $_GET['ref_id'] ) ) {
+        include( plugin_dir_path( __FILE__ ) . 'templates/reference.php');
       }
       else { 
         include( plugin_dir_path( __FILE__ ) . 'templates/form.php');
@@ -59,5 +64,5 @@ class Tutis_Custom_Shortcode {
 
 }
 
-new Tutis_Custom_Shortcode;
+$tutis_custom_shortcode = new Tutis_Custom_Shortcode();
 ?>

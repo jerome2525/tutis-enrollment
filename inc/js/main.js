@@ -1,4 +1,5 @@
 jQuery(document).ready(function($){
+
 	var daterange1 = $('#tutis-filter-form1').attr('daterange');
 	if(daterange1) {
 		if( daterange1 == 30 || daterange1 == 90 || daterange1 == 7 ) {
@@ -125,11 +126,9 @@ jQuery(document).ready(function($){
 	function tutis_student_delete() {
 		$('.tutis-delete-student').click(function(e) {
 			e.preventDefault();
-			if(confirm('Are you sure that you wanted to delete this student?')) {
-				var tutis_student_id = $(this).attr('href');
-				$('.tutis-student-id').val( tutis_student_id );
-				$('#tutis-delete-list-form1').submit();
-			}
+			var tutis_student_id = $(this).attr('href');
+			$('.tutis-student-id').val( tutis_student_id );
+			$('#tutis-delete-list-form1').submit();
 			tutis_student_btn_disabled();
 		});
 		
@@ -151,10 +150,17 @@ jQuery(document).ready(function($){
 		  		if( tutis_frontend_object.tutis_temp_id ) {
 					mySecurePayUI.reset();
 				}
-				var final_amount = $('.tutis-total-amount').text();
+				var final_amount = $('.tutis-total-amount').text().replace(/\./g,'');
+				var final_amount_billed = $('.tutis-total-amount').text();
 				var quote_token = $('#quoteID1').text();
-				$('#billedAmount1').text(final_amount);
-				$('#securepay_price_field').val(final_amount);
+				$('#billedAmount1').text( final_amount_billed );
+				if ( final_amount_billed == Math.floor( final_amount_billed ) ) {
+					$('#securepay_price_field').val( final_amount + '00' );
+				}
+				else {
+					$('#securepay_price_field').val( final_amount );
+				}
+				
 				$('#quote_token_field').val(quote_token);
 			}, 2000);
 		  	
@@ -174,7 +180,35 @@ jQuery(document).ready(function($){
 		var pr = $('#tbfee1').text();
 		var tot = $('#coursefee1').text();
 		$('#tbqty1').text(qty);
-		$('#tbtotal1').text(tot);
+		$('#tbtotal1').text( tot );
+		//console.log(tot);
+	}
+
+	var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1),
+	        sURLVariables = sPageURL.split('&'),
+	        sParameterName,
+	        i;
+
+		for (i = 0; i < sURLVariables.length; i++) {
+	        sParameterName = sURLVariables[i].split('=');
+
+	        if (sParameterName[0] == sParam) {
+	            return decodeURIComponent(sParameterName[1]);
+	        }
+	    }
+	    return false;
+	};
+
+	function disabled_button_student() {
+		var tutis_student_count = $('#result .student-count').length;
+		var tutis_course_vacant_count = tutis_frontend_object.tutis_course_vacant_count;
+		if( tutis_student_count >= tutis_course_vacant_count ) {
+			$('#student-btn1').hide();
+		}
+		else {
+			$('#student-btn1').show();
+		}
 	}
 
 	function ws_filter_ajx(filter, res_id) {
@@ -193,6 +227,9 @@ jQuery(document).ready(function($){
                 },
                 success:function(data){
            			$(res_id).html(data);
+           			if( res_id == '#result' ) {
+           				disabled_button_student();
+           			}
      				expand_icon();
 	             	tutis_pagination();
 	               	tutis_student_delete();
@@ -200,8 +237,12 @@ jQuery(document).ready(function($){
 	            	tutis_check_student_list();
 	            	tutis_count_qty();
 	            	$('.multisteps-form-field label').removeClass('show-label');
-	            	if( res_id == '#resultfinal' && tutis_frontend_object.tutis_thank_url ) {
-	            		window.location = tutis_frontend_object.tutis_thank_url;
+	            	if( res_id == '#resultfinal') {
+	            		var temp_id = getUrlParameter('temp_id');
+	            		//console.log(temp_id);
+	            		if( $('.status').text() !== 'failed' ) {
+	            			window.location.href = window.location.href.replace( /[\?#].*|$/, "?ref_id=" + temp_id );
+	            		}
 	            	}
                     
                 },
@@ -210,6 +251,28 @@ jQuery(document).ready(function($){
         }
 
     }
+
+    function tutis_validate_abn(num) {
+	    const weights = new Array(10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
+	    // Convert to string and remove all white space
+	    num = num.toString().replace(/\s/g, "");
+	    // Split it to number array
+	    num = num.split('').map(n => parseInt(n));
+	    // Subtract 1 from the first (left-most) digit of the ABN to give a new 11 digit number
+	    num[0] = num[0] - 1;
+	    // Multiply each of the digits in this new number by a "weighting factor" based on its position as shown in the table below
+	    num = num.map((n, i) => n * weights[i]);
+	    // Sum the resulting 11 products
+	    let total = num.reduce((acc, n) => {
+	        return acc + n;
+	    }, 0);
+	    // Divide the sum total by 89, noting the remainder
+	    if(total % 89 === 0) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
 
     function tutis_validate_email($email) {
 		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
@@ -226,6 +289,7 @@ jQuery(document).ready(function($){
     function tutis_input_checker() {
 		var inputsVal = $('.tutis-employer-row').find( $('.input-has-val') );
 		var inputsReq = $('.input-required').length;
+		var inputsError = $('.tutis-employer-row .input-error').length;
 		if(inputsVal.length == inputsReq) {
 			$('.multisteps-form__form .employer-btn').removeClass('disabled');
 		}
@@ -233,6 +297,15 @@ jQuery(document).ready(function($){
 			$('.multisteps-form__form .employer-btn').addClass('disabled');
 		}
     }
+
+    function tutis_validate_street_number( str ) {
+	  if (!/^\d{1,5}$/.test(str)) {
+	    return false;
+	  }
+	  const num = parseInt(str, 10);
+	  return num >= 1 && num < 1e5;
+	}
+
 
 	tutis_review_btn_click();
 
@@ -279,6 +352,12 @@ jQuery(document).ready(function($){
 
     $('#tutis-final-payment1').submit(function(){
 		var res_id = '#resultfinal';
+		ws_filter_ajx(this, res_id);
+		return false;
+    });
+
+     $('#tutis-securepay-error-payment1').submit(function(){
+		var res_id = '#resultsecurepay';
 		ws_filter_ajx(this, res_id);
 		return false;
     });
@@ -335,6 +414,26 @@ jQuery(document).ready(function($){
 				$(this).addClass('input-error');
 			}
 		}
+		else if( $(this).hasClass('input-abn') ) {
+			if( tutis_validate_abn( $(this).val() ) ) { 
+				$(this).addClass('input-has-val');
+				$(this).removeClass('input-error');
+			}
+			else {
+				$(this).removeClass('input-has-val');
+				$(this).addClass('input-error');
+			}
+		}
+		else if( $(this).hasClass('input-street-number') ) {
+			if( tutis_validate_street_number( $(this).val() ) ) { 
+				$(this).addClass('input-has-val');
+				$(this).removeClass('input-error');
+			}
+			else {
+				$(this).removeClass('input-has-val');
+				$(this).addClass('input-error');
+			}
+		}
 		else {
 			if( $(this).val() ) {
 				$(this).addClass('input-has-val');
@@ -347,6 +446,25 @@ jQuery(document).ready(function($){
 		}
 
 		tutis_input_checker();
+	});
+
+	$('.tutis-employer-row .input-abn-not-required').keyup(function() {
+		if( $(this).val() ) {
+			$(this).addClass('input-has-val input-required');
+			if( tutis_validate_abn( $(this).val() ) ) { 
+				$(this).addClass('input-has-val');
+				$(this).removeClass('input-error');
+			}
+			else {
+				$(this).removeClass('input-has-val');
+				$(this).addClass('input-error');
+			}
+	 	}
+	 	else {
+	 		$(this).removeClass('input-error');
+	 		$(this).removeClass('input-has-val input-required');
+	 	}
+	 	tutis_input_checker();
 	});
 
 	$('.company-option').click(function() {
@@ -385,7 +503,7 @@ jQuery(document).ready(function($){
 		var data_step_minus = parseInt(data_step) - 1;
 		$('.pg' + data_step_minus).addClass('js-active');
 		$('.step' + data_step).removeClass('js-active');
-		$('.multisteps-form-field label').addClass('show-label');
+		$('.multisteps-form-field label').not('.company-radio').addClass('show-label');
 	});
 
 	$('.multisteps-form-field input, .multisteps-form-field select').change(function() {
@@ -470,4 +588,27 @@ jQuery(document).ready(function($){
 		}
 	});	
 
+	setTimeout( function() {
+		if ( $('#coursename1 .default-selected').length ) { 
+			$('.ss_ul li').each(function() {
+				var def_li_id = $(this).attr('data-title');
+				var def_id = $('#coursename1 .default-selected').text();
+				if( def_li_id == def_id ) {
+					$( this ).click();
+					$('#searchbtn').submit();
+				}
+			});
+		}
+	}, 500);
+
+	$('.tutis-delete-student').tooltip();
+
+	disabled_button_student();
+
+	$('#zero-btn1').click(function() {
+		$('#tutis-final-payment1').submit();
+	});
+
 });
+
+

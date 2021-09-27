@@ -12,7 +12,7 @@ Text Domain: tutis-enrollment
 
 require plugin_dir_path( __FILE__ ) . 'inc/tutis-enrollment.php';
 
-new Tutis_Enrollment();
+$tutis_enrollment  = new Tutis_Enrollment();
 
 
 

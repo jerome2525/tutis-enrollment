@@ -41,6 +41,14 @@
   <input name="final_payment_pagi" type="hidden" value="1">
 </form>
 
+<form class="tutis-filter-form" id="tutis-securepay-error-payment1" method="POST" action="<?php echo admin_url( "admin-ajax.php" ); ?>">
+  <input type="hidden" name="action" value="wsfilter">
+  <input name="temp_id" type="hidden" value="<?php echo $_GET['temp_id']; ?>">
+  <input name="course_id" type="hidden" value="<?php echo $_GET['course_id']; ?>">
+  <input name="secure_error_code" id="secure-error-code1" type="hidden" value="<?php echo $_GET['course_id']; ?>">
+  <input name="failed_securepay_pagi" type="hidden" value="1">
+</form>
+
 
 <!--multisteps-form-->
 <div class="multisteps-form">
@@ -57,19 +65,19 @@
     <!--single form panel-->
     <div class="multisteps-form__panel pg1 js-active" data-animation="scaleIn" data-page="1">
       <h3 class="multisteps-form__title"><?php if( get_option('tutis_enrol_student_title') ) { echo get_option('tutis_enrol_student_title'); } else { echo 'Thankyou for deciding to study with us'; } ?></h3>
-      <p><?php if( get_option('tutis_enrol_student_instruction') ) { echo get_option('tutis_enrol_student_instruction'); } else { echo 'Lets get you setup, please add details for all students you wish to control'; } ?></p>
+      <p class="multisteps-form__p"><?php if( get_option('tutis_enrol_student_instruction') ) { echo get_option('tutis_enrol_student_instruction'); } else { echo 'Lets get you setup, please add details for all students you wish to control'; } ?></p>
       <div id="result" class="tutis-student-result">
         <?php get_student_list_default( $_GET['temp_id'] ); ?>
       </div>
       <div class="multisteps-form__content">
         <div class="multisteps-form-field">
           <label>First Name *</label>
-          <input name="student_firstname" type="text" placeholder="First Name *" form="tutis-student-form1" required="" />
+          <input name="student_firstname" type="text" placeholder="First Name *" form="tutis-student-form1" maxlength="128" required="" />
         </div>
 
         <div class="multisteps-form-field">
           <label>Last Name *</label>
-          <input name="student_lastname" type="text" placeholder="Last Name *" form="tutis-student-form1" required="" />
+          <input name="student_lastname" type="text" placeholder="Last Name *" form="tutis-student-form1" maxlength="128" required="" />
         </div>
 
         <div class="multisteps-form-field">
@@ -79,22 +87,22 @@
 
         <div class="multisteps-form-field">
           <label>Email Address *</label>
-          <input class="multisteps-form__input form-control" name="student_email" type="email" placeholder="Email *" form="tutis-student-form1" required="" />
+          <input class="multisteps-form__input form-control" name="student_email" type="email" placeholder="Email *" form="tutis-student-form1" maxlength="256" required="" />
         </div>
 
         <div class="multisteps-form-field">
           <label>Mobile Phone</label>
-          <input class="multisteps-form__input form-control" name="student_phone" type="text" placeholder="Phone" form="tutis-student-form1"/>
+          <input class="multisteps-form__input form-control" name="student_phone" id="student-phone" type="tel" pattern="^04[0-9]{8}$" placeholder="Phone" form="tutis-student-form1" oninvalid="this.setCustomValidity('Invalid Value: please check your data and try again')"  onchange="this.setCustomValidity('')" />
         </div>
 
         <div class="multisteps-form-field">
           <label>USI</label>
-          <input class="multisteps-form__input form-control" name="student_usi" type="text" placeholder="USI" form="tutis-student-form1"/>
+          <input class="multisteps-form__input form-control" name="student_usi" id="student-usi" type="text" pattern="^[2-9A-HJ-NP-Z]{10}$" placeholder="USI" form="tutis-student-form1" oninvalid="this.setCustomValidity('Invalid Value: please check your data and try again')"  onchange="this.setCustomValidity('')" />
         </div>	
       </div>
 
       <div class="multisteps-form-btn-field align-right">
-      	<input type="submit" class="tutis-btn" value="Add Student" form="tutis-student-form1">
+          <input type="submit" class="tutis-btn" id="student-btn1" value="Add Student" form="tutis-student-form1">
     	</div>
 
     	<div class="multisteps-form-btn-field step-col-2">
@@ -102,7 +110,7 @@
     		  <a href="<?php echo get_permalink( $obj_id ) . '?&temp_id=' . $_GET['temp_id']; ?>" class="tutis-btn btn-left" data-step="1">Back</a>
         </div>
         <div class="right-col">
-      	 <button class="tutis-btn js-btn-next btn-right student-btn disabled" type="button" title="Next" data-step="1">Next</button>
+      	 <button class="tutis-btn js-btn-next btn-right student-btn disabled" type="button" data-step="1">Next</button>
         </div>
     	</div>
     </div>
@@ -114,8 +122,8 @@
       <div class="multisteps-form__content multisteps-form__content-full">
         <div class="multisteps-form-field multi-radio">
           <p class="label">Are you enrolling the student on behalf of a company?</p>
-          <div class="multi-radio-container"><input name="private_student" type="radio" value="1" required="" class="company-option cs1" form="tutis-company-form1" /><span>Yes</span></div>
-          <div class="multi-radio-container"><input name="private_student" type="radio" value="0" required="" class="company-option cs2" form="tutis-company-form1" checked="checked"/><span>No</span></div>
+          <div class="multi-radio-container"><label class="company-radio"><input name="private_student" type="radio" value="1" required="" class="company-option cs1" form="tutis-company-form1" />Yes</label></div>
+          <div class="multi-radio-container"><label class="company-radio"><input name="private_student" type="radio" value="0" required="" class="company-option cs2" form="tutis-company-form1" checked="checked"/>No</label></div>
         </div>
       </div>
 
@@ -129,7 +137,7 @@
           <?php if( get_option('tutis_hide_abn') != 1 ) { ?>
             <div class="multisteps-form-field">
               <label>ABN <?php if( get_option('tutis_required_abn') == 1 ) { echo '*'; } ?></label>
-              <input name="company_abn" type="text" placeholder="ABN <?php if( get_option('tutis_required_abn') == 1 ) { echo '*'; } ?>" form="tutis-company-form1" class="<?php if( get_option('tutis_required_abn') == 1 ) { echo 'input-required'; } ?> "/>
+              <input name="company_abn" type="text" placeholder="ABN <?php if( get_option('tutis_required_abn') == 1 ) { echo '*'; } ?>" form="tutis-company-form1" class="<?php if( get_option('tutis_required_abn') == 1 ) { echo 'input-required'; } else { echo 'input-abn-not-required'; } ?> input-abn"/>
             </div>
           <?php } ?>  
           <?php if( get_option('tutis_hide_account') != 1 ) { ?>
@@ -149,27 +157,28 @@
               <label>Post Delivery Box <?php if( get_option('tutis_required_post_box') == 1 ) { echo '*'; } ?></label>
               <input name="company_post_delivery" type="text" placeholder="Post Delivery Box <?php if( get_option('tutis_required_post_box') == 1 ) { echo '*'; } ?>" form="tutis-company-form1" class="<?php if( get_option('tutis_required_post_box') == 1 ) { echo 'input-required'; } ?> " />
             </div>
+          <?php } ?>
+
+          <?php if( get_option('tutis_hide_flat') != 1 ) { ?>
+            <div class="multisteps-form-field">
+              <label>Flat/Unit Details <?php if( get_option('tutis_required_flat') == 1 ) { echo '*'; } ?></label>
+              <input name="company_flat_unit" type="text" placeholder="Flat/Unit Details <?php if( get_option('tutis_required_flat') == 1 ) { echo '*'; } ?>" form="tutis-company-form1"/>
+            </div>
           <?php } ?> 
+
           <?php if( get_option('tutis_hide_building') != 1 ) { ?>
             <div class="multisteps-form-field">
               <label>Building / Property Name <?php if( get_option('tutis_required_building') == 1 ) { echo '*'; } ?></label>
               <input name="company_building" type="text" placeholder="Building / Property Name <?php if( get_option('tutis_required_building') == 1 ) { echo '*'; } ?>" form="tutis-company-form1" class="<?php if( get_option('tutis_required_building') == 1 ) { echo 'input-required'; } ?> " />
             </div>
           <?php } ?> 
-
-          <div class="multisteps-form-field">
-            <label>Street Number *</label>
-            <input name="company_st_number" type="text" placeholder="Street Number *" class="input-required" form="tutis-company-form1"/>
-          </div>
         </div>
 
         <div class="multisteps-form__content tutis-b-address-col tutis-b-middle-address-col tutis-count-generate-col">
-          <?php if( get_option('tutis_hide_flat') != 1 ) { ?>
-            <div class="multisteps-form-field">
-              <label>Flat/Unit Details <?php if( get_option('tutis_required_flat') == 1 ) { echo '*'; } ?></label>
-              <input name="company_flat_unit" type="text" placeholder="Flat/Unit Details <?php if( get_option('tutis_required_flat') == 1 ) { echo '*'; } ?>" form="tutis-company-form1"/>
-            </div>
-          <?php } ?>   
+          <div class="multisteps-form-field">
+            <label>Street Number *</label>
+            <input name="company_st_number" type="text" placeholder="Street Number *" class="input-required input-street-number" form="tutis-company-form1"/>
+          </div> 
 
           <div class="multisteps-form-field">
             <label>Street Name *</label>
@@ -190,7 +199,7 @@
               <option value="ACT">ACT</option>
               <option value="NSW">NSW</option>
               <option value="NT">NT</option>
-              <option value="QLT">QLT</option>
+              <option value="QLD">QLD</option>
               <option value="SA">SA</option>
               <option value="TAS">TAS</option>
               <option value="VIC">VIC</option>
@@ -199,7 +208,7 @@
           </div>
           <div class="multisteps-form-field">
             <label>Post Code *</label>
-            <input name="company_post_code" type="text" placeholder="Post Code *" form="tutis-company-form1" class="input-required" required="" />
+            <input name="company_post_code" type="text" placeholder="Post Code *" form="tutis-company-form1" class="input-required input-street-number" required="" />
           </div>
           <?php if( get_option('tutis_hide_country') != 1 ) { ?>
             <div class="multisteps-form-field multisteps-form-field-select">
@@ -255,10 +264,10 @@
         
       <div class="multisteps-form-btn-field step-col-2">
         <div class="left-col">
-          <button class="tutis-btn js-btn-prev btn-left" type="button" title="back" data-step="2">Back</button>
+          <button class="tutis-btn js-btn-prev btn-left" type="button" data-step="2">Back</button>
         </div>
         <div class="right-col">
-          <button class="tutis-btn ml-auto js-btn-next btn-right employer-btn" type="button" title="Next" data-step="2" id="reviewbtn1">Review Invoice</button>
+          <button class="tutis-btn ml-auto js-btn-next btn-right employer-btn" type="button" data-step="2" id="reviewbtn1">Review Invoice</button>
         </div>
       </div>
     </div>
@@ -279,17 +288,18 @@
 
       <div id="paylatercontent" style="background:#fff" class="lity-hide apply-discount-content">
         <div class="discount-form-field">
-          <p>If you have an Invoice Number enter it now.</p> 
-          <p>Otherwise just press submit and you can pay later.</p>
-          <input name="invoice_number" type="text" placeholder="Invoice Number" form="tutis-final-payment1" />
+          <p>If you have any information you would like to add to this enrolment to help link it to your systems, please enter it now.
+Otherwise just press submit and you will be issued a invoice to pay later.</p> 
+          <input name="invoice_number" type="text" placeholder="Comments" form="tutis-final-payment1" maxlength="128" />
         </div>
         <div class="discount-button-field">
           <button class="tutis-btn ml-auto" type="button" form="tutis-final-payment1" id="invoice-btn1">Submit</button>
+          <button class="tutis-btn cancel-btn" id="cancel-btn1" type="button" data-lity-close>Cancel</button>
         </div>
       </div>
 
       <h3 class="multisteps-form__title"><?php if( get_option('tutis_review_enrol_title') ) { echo get_option('tutis_review_enrol_title'); } else { echo 'OK, we are nearly there'; } ?></h3>
-      <p><?php if( get_option('tutis_review_enrol_instruction') ) { echo get_option('tutis_review_enrol_instruction'); } else { echo 'Please check the details, before going to the payment screen'; } ?></p>
+      <p class="multisteps-form__p"><?php if( get_option('tutis_review_enrol_instruction') ) { echo get_option('tutis_review_enrol_instruction'); } else { echo 'Please check the details, before going to the payment screen'; } ?></p>
       <h3 class="multisteps-form__title">Student Details: </h3>
       <div class="multisteps-form__content multisteps-form__content-full">
         <div id="result2" class="tutis-student-result tutis-review-invoice-student-list"></div>
@@ -299,11 +309,14 @@
 
       <div class="multisteps-form-btn-field step-col-2">
         <div class="left-col">
-          <button class="tutis-btn js-btn-prev btn-left" type="button" title="back" data-step="3">Back</button>
+          <button class="tutis-btn js-btn-prev btn-left" type="button" data-step="3">Back</button>
         </div>
         <div class="right-col">
-          <a href="#paylatercontent" class="pay-later-btn" id="paylaterbtn1" data-lity="">Pay Later</a>
-          <button class="tutis-btn ml-auto js-btn-next btn-right employer-btn activate-payment-btn" type="button" title="Next" data-step="3">Pay Now</button>
+          <?php if( get_option('tutis_paylater') == 1 ) { ?>
+            <a href="#paylatercontent" class="pay-later-btn" id="paylaterbtn1" data-lity="">Pay Later</a>
+          <?php } ?>
+            <button class="tutis-btn ml-auto" type="button" form="tutis-final-payment1" id="zero-btn1">Pay Now</button>
+            <button class="tutis-btn ml-auto js-btn-next btn-right employer-btn activate-payment-btn" type="button" data-step="3">Pay Now</button>
         </div>
       </div>
     </div>
@@ -312,24 +325,27 @@
   <div class="multisteps-form__panel pg4" data-animation="scaleIn" data-page="4">
       <?php if( get_option('tutis_secure_pay_client_id') && get_option('tutis_secure_pay_merchant_code') ) { ?>
         <input name="securepay_card_type" type="hidden" id="securepay_card_type_field" form="tutis-final-payment1"/>
+        <input name="payment_type" type="hidden" value="SECURE_PAY" id="payment_type" form="tutis-final-payment1"/>
         <input name="securepay_token" type="hidden" id="securepay_token_field" form="tutis-final-payment1"/>
         <input name="securepay_price" type="hidden" id="securepay_price_field" form="tutis-final-payment1"/>
         <input name="quote_token" type="hidden" id="quote_token_field" form="tutis-final-payment1"/>
+        <input name="secure_ip" type="hidden" id="quote_ip_field" form="tutis-final-payment1" value="<?php echo tutis_get_ip(); ?>" />
         <h3 class="multisteps-form__title">Payment Details</h3>
+        <div id="resultfinal"></div>
         <p>You are about to billed: <strong>$ <span id="billedAmount1" class="span-bold"></span></strong></p>
         <div id="securepay-ui-container"></div>
         <p class="tutis-notification">Please don't navigate away from the page until the payment is completed</p>
         <p class="tutis-notification">Please don't press the the submit payment button multiple times</p>
         <div class="multisteps-form-btn-field step-col-2">
           <div class="left-col">
-            <button class="tutis-btn js-btn-prev btn-left" type="button" title="back" data-step="4">Back</button>
+            <button class="tutis-btn js-btn-prev btn-left" type="button" data-step="4">Back</button>
           </div>
           <div class="right-col">
             <button class="tutis-btn submit-payment-btn" type="button" id="secureSubmit1">Submit Payment</button>
           </div>
         </div>
       <?php } ?>  
-      <div id="resultfinal"></div>
+      
   </div>
   </form>
 </div>

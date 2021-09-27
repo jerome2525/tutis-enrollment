@@ -10,15 +10,10 @@ class Tutis_Footer {
     }
 
     public function securepay_api() {
-    	if( get_option('tutis_secure_pay_client_id') && get_option('tutis_secure_pay_merchant_code') ) { 
-    		if( get_option('tutis_sandbox') == 1 ) {
-    			$secure_url = 'https://payments.auspost.net.au';
-    		}
-    		else {
-    			$secure_url = 'https://payments-stest.npe.auspost.zone';
-    		}
+    	if( get_option('tutis_secure_pay_client_id') && get_option('tutis_secure_pay_merchant_code') && get_option('tutis_secure_js_url') ) { 
+			$secure_url = get_option('tutis_secure_js_url');
     	?>
-		    <script id="securepay-ui-js" src="<?php echo $secure_url; ?>/v3/ui/client/securepay-ui.min.js"></script>
+		    <script id="securepay-ui-js" src="<?php echo $secure_url; ?>"></script>
 		    <script type="text/javascript">
 		      var mySecurePayUI = new securePayUI.init({
 		        containerId: 'securepay-ui-container',
@@ -29,7 +24,7 @@ class Tutis_Footer {
 		            showCardIcons: true,
 		            onCardTypeChange: function(cardType) {
 		              // card type has changed
-		              console.log(cardType); 
+		              //console.log(cardType); 
 		            },
 		            onBINChange: function(cardBIN) {
 		              // card BIN has changed
@@ -38,7 +33,7 @@ class Tutis_Footer {
 		              // form validity has changed
 		            },
 		            onTokeniseSuccess: function(tokenisedCard) {
-		            	console.log(tokenisedCard.scheme); 
+		            	//console.log(tokenisedCard.scheme); 
 		            	jQuery('#securepay_card_type_field').val(tokenisedCard.scheme.toUpperCase());  
 		                jQuery('#securepay_token_field').val(tokenisedCard.token);  
 		                jQuery('#tutis-final-payment1').submit();    
@@ -47,6 +42,9 @@ class Tutis_Footer {
 		            },
 		            onTokeniseError: function(errors) {
 		              // tokenization failed
+		              //console.log(errors);
+		              jQuery('#secure-error-code1').val(errors);
+		              jQuery('#tutis-securepay-error-payment1').submit(); 
 		            }
 		        },
 		        onLoadComplete: function () {
@@ -65,4 +63,5 @@ class Tutis_Footer {
     }
 }
 
-new Tutis_Footer;
+$tutis_footer = new Tutis_Footer();
+?>
